@@ -1,0 +1,133 @@
+openapi: 3.0.3
+info:
+  title: KSUM Investable Startups API
+  description: >
+    API to fetch the list of investable startups published by Kerala Startup Mission.
+    The API returns startup details including company name, website, product description,
+    funding stage, sector, funding amount, pitch deck label, location, email, and phone number.
+  version: 1.0.0
+
+servers:
+  - url: https://api.startupmission.in
+    description: Production server
+
+paths:
+  /webhook/investable:
+    get:
+      summary: Get investable startups
+      description: >
+        Returns a list of investable startups with their funding details,
+        sector, stage, location, and contact information.
+      operationId: getInvestableStartups
+      tags:
+        - Investable Startups
+      responses:
+        "200":
+          description: Successfully retrieved investable startups
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/InvestableStartup"
+              example:
+                - row_number: 2
+                  Startup: Cureous Labs Pvt Ltd
+                  Website: https://www.cureous.in/
+                  Product: Healthcare solutions provider focused on preventing bedsores and bedfalls
+                  Stage: Seed
+                  Sector: Healthcare
+                  Amount Looking for: 6 Cr.
+                  Pitch Deck: Deck
+                  Location: Banglore
+                  Email: asish@cureous.in
+                  Phone: 9895657230
+        "500":
+          description: Internal server error
+
+components:
+  schemas:
+    InvestableStartup:
+      type: object
+      description: Investable startup details
+      properties:
+        row_number:
+          type: integer
+          example: 2
+          description: Row number of the record in the source sheet or database.
+
+        Startup:
+          type: string
+          example: Cureous Labs Pvt Ltd
+          description: Name of the startup or company.
+
+        Website:
+          type: string
+          format: uri
+          example: https://www.cureous.in/
+          description: Official website of the startup.
+
+        Product:
+          type: string
+          example: Healthcare solutions provider focused on preventing bedsores and bedfalls
+          description: Brief description of the startup's product or solution.
+
+        Stage:
+          type: string
+          example: Seed
+          description: Funding or business stage of the startup.
+          enum:
+            - Seed
+            - Pre-Seed
+            - Pre-Series A
+            - Series A
+            - Growth
+            - Other
+
+        Sector:
+          type: string
+          example: Healthcare
+          description: Sector or industry category of the startup.
+
+        Amount Looking for:
+          type: string
+          example: 6 Cr.
+          description: Funding amount the startup is looking to raise.
+
+        Pitch Deck:
+          type: string
+          example: Deck
+          description: Pitch deck reference or label.
+
+        Location:
+          type: string
+          example: Kochi
+          description: Location of the startup.
+
+        Email:
+          type: string
+          format: email
+          example: asish@cureous.in
+          description: Contact email address.
+
+        Phone:
+          oneOf:
+            - type: integer
+            - type: string
+          example: 9895657230
+          description: Contact phone number. May be returned as a number or string.
+
+      required:
+        - row_number
+        - Startup
+        - Product
+        - Stage
+        - Sector
+        - Amount Looking for
+        - Location
+        - Email
+        - Phone
+
+tags:
+  - name: Investable Startups
+    description: APIs related to investable startup listings
